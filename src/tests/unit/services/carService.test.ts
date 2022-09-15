@@ -6,16 +6,20 @@ import CreateCarModel from '../../../creaters/createCarModel';
 import {
   carArrayMock,
   carMock,
+  carMockFailure,
   carMockWithId
 } from '../mocks/carMocks';
 import CarService from '../../../services/CarService';
+import { ErrorTypes } from '../../../errors/catalog'
 
 chai.use(chaiAsPromised);
 
 describe('Car Service', () => {
   const carModel = CreateCarModel.instantiate();
   const carService = new CarService(carModel);
-
+  const _id = '4edd40c86762e0fb12000003';
+  const invalidId = 'INVALID_ID';
+  const nonExistentId = '4edd40c86762e0fb12001233';
 
   afterEach(() => {
     sinon.restore();
@@ -42,5 +46,21 @@ describe('Car Service', () => {
     });
   });
 
+  describe('Finding a car', () => {
+    it('successfully found', async () => {
+      sinon.stub(carModel, 'readOne').resolves(carMockWithId);
+      const car = await carService.readOne(_id);
+      expect(car).to.be.deep.equal(carMockWithId);
+    });
   
+    it('invalid ID', async () => {
+      sinon.stub(carModel, 'readOne').resolves(null);
+      return expect(carService.readOne(invalidId)).to.eventually.be.rejectedWith(Error, ErrorTypes.InvalidMongoId);
+    });
+  
+    it('if car does not exist', async () => {
+      sinon.stub(carModel, 'readOne').resolves(carMockFailure);
+        return expect(carService.readOne(nonExistentId)).to.eventually.be.rejectedWith(Error, ErrorTypes.EntityNotFound);
+    });
+  });
 })
