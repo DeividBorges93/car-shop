@@ -5,6 +5,7 @@ import { ZodError } from 'zod';
 import CreateCarModel from '../../../creaters/createCarModel';
 import {
   carMock,
+  carArrayMock,
   carMockWithId,
   
 } from '../mocks/carMocks';
@@ -24,6 +25,14 @@ describe('Car Model', () => {
       sinon.stub(Model, 'create').resolves(carMockWithId);
       const newCar = await carModel.create(carMock);
       expect(newCar).to.be.deep.equal(carMockWithId);
+    });
+  });
+
+  describe('Finding all cars', () => {
+    it('successfully found', async () => {
+      sinon.stub(Model, 'find').resolves(carArrayMock);
+      const cars = await carModel.read();
+      expect(cars).to.be.deep.equal(carArrayMock);
     });
   });
 });
