@@ -1,37 +1,29 @@
 import * as sinon from 'sinon';
-import { expect } from 'chai';
+import chai, { expect } from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 import { ZodError } from 'zod';
 import CreateCarModel from '../../../creaters/createCarModel';
-import { Model } from 'mongoose';
 import {
   carMock,
-  carMockWithId
+  carMockWithId,
+  
 } from '../mocks/carMocks';
+import { Model } from 'mongoose';
+
+chai.use(chaiAsPromised);
 
 describe('Car Model', () => {
   const carModel = CreateCarModel.instantiate();
 
-  before(() => {
-    sinon.stub(Model, 'create').resolves(carMockWithId);
-  });
-
-  after(()=>{
+  afterEach(()=>{
     sinon.restore();
   })
 
-  describe('Creating a car', async () => {
+  describe('Creating a car', () => {
     it('successfully created', async () => {
+      sinon.stub(Model, 'create').resolves(carMockWithId);
       const newCar = await carModel.create(carMock);
       expect(newCar).to.be.deep.equal(carMockWithId);
     });
-
-    it('creation failure', async () => {
-      try {
-        await carModel.create({} as any)
-      } catch (error) {
-        expect(error).to.be.instanceOf(ZodError);
-      }
-    })
   });
-
 });
