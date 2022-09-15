@@ -16,6 +16,8 @@ describe('Car Controller', () => {
   const carController = new CarController(carService);
   const req = {} as Request;
   const res = {} as Response;
+  const _id = '4edd40c86762e0fb12000003';
+
 
   before(() => {
     res.status = sinon.stub().returns(res);
@@ -40,7 +42,7 @@ describe('Car Controller', () => {
       expect(json.calledWith(carMockWithId)).to.be.true;
     });
   });
-  
+
   describe('Finding all cars', () => {
     it('successfully found', async () => {
       sinon.stub(carService, 'read').resolves(carArrayMock);
@@ -52,6 +54,21 @@ describe('Car Controller', () => {
   
       expect(status.calledWith(200)).to.be.true;
       expect(json.calledWith(carArrayMock)).to.be.true;
+    });
+  });
+
+  describe('Finding a car', () => {
+    it('successfully found', async () => {
+      sinon.stub(carService, 'readOne').resolves(carMockWithId);
+      
+      req.params = { id: _id };
+      await carController.readOne(req, res);
+      
+      const status = res.status as sinon.SinonStub;
+      const json = res.json as sinon.SinonStub
+  
+      expect(status.calledWith(200)).to.be.true;
+      expect(json.calledWith(carMockWithId)).to.be.true;
     });
   });
 });
