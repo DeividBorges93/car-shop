@@ -4,6 +4,7 @@ import * as sinon from 'sinon';
 import { ZodError } from 'zod';
 import CreateCarModel from '../../../creaters/createCarModel';
 import {
+  carArrayMock,
   carMock,
   carMockWithId
 } from '../mocks/carMocks';
@@ -32,4 +33,14 @@ describe('Car Service', () => {
       return expect(carService.create({} as any)).to.eventually.be.rejectedWith(ZodError);
     })
   });
+
+  describe('Finding all cars', () => {
+    it('successfully found', async () => {
+      sinon.stub(carModel, 'read').resolves(carArrayMock);
+      const cars = await carService.read();
+      expect(cars).to.be.deep.equal(carArrayMock);
+    });
+  });
+
+  
 })
