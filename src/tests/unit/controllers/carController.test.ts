@@ -39,7 +39,8 @@ describe('Car Controller', () => {
       expect(status.calledWith(201)).to.be.true;
       expect(json.calledWith(carMockWithId)).to.be.true;
     });
-
+  });
+  
   describe('Finding all cars', () => {
     it('successfully found', async () => {
       sinon.stub(carService, 'read').resolves(carArrayMock);
@@ -52,6 +53,5 @@ describe('Car Controller', () => {
       expect(status.calledWith(200)).to.be.true;
       expect(json.calledWith(carArrayMock)).to.be.true;
     });
-  });
   });
 });
