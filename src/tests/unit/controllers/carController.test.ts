@@ -5,6 +5,7 @@ import { Request, Response } from 'express';
 import CreateCarService from '../../../creaters/createCarService';
 import CarController from '../../../controllers/CarController';
 import {
+  carArrayMock,
   carMock,
   carMockFailure,
   carMockWithId
@@ -38,5 +39,19 @@ describe('Car Controller', () => {
       expect(status.calledWith(201)).to.be.true;
       expect(json.calledWith(carMockWithId)).to.be.true;
     });
+
+  describe('Finding all cars', () => {
+    it('successfully found', async () => {
+      sinon.stub(carService, 'read').resolves(carArrayMock);
+  
+      await carController.read(req, res);
+      
+      const status = res.status as sinon.SinonStub;
+      const json = res.json as sinon.SinonStub
+  
+      expect(status.calledWith(200)).to.be.true;
+      expect(json.calledWith(carArrayMock)).to.be.true;
+    });
+  });
   });
 });
