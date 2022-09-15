@@ -1,37 +1,35 @@
-import { expect } from 'chai';
+import chai, { expect } from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 import * as sinon from 'sinon';
 import { ZodError } from 'zod';
-import CreateCarService from '../../../creaters/createCarService';
 import CreateCarModel from '../../../creaters/createCarModel';
-import { Model } from 'mongoose';
 import {
   carMock,
   carMockWithId
 } from '../mocks/carMocks';
+import CarService from '../../../services/CarService';
+
+chai.use(chaiAsPromised);
 
 describe('Car Service', () => {
-  const carService = CreateCarService.instantiate();
+  const carModel = CreateCarModel.instantiate();
+  const carService = new CarService(carModel);
 
-  before(() => {
-    sinon.stub(Model, 'create').resolves(carMockWithId);
-  });
 
-  after(() => {
+  afterEach(() => {
     sinon.restore();
   });
 
   describe('Creating a car', () => {
     it('successfully created', async () => {
+      sinon.stub(carModel, 'create').resolves(carMockWithId);
       const newCar = await carService.create(carMock);
       expect(newCar).to.be.deep.equal(carMockWithId);
     });
 
     it('creation failure', async () => {
-      try {
-        await carService.create({} as any)
-      } catch (error) {
-        expect(error).to.be.instanceOf(ZodError);
-      }
+      sinon.stub(carModel, 'create').resolves(carMockWithId);
+      return expect(carService.create({} as any)).to.eventually.be.rejectedWith(ZodError);
     })
-  })
+  });
 })
