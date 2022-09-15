@@ -10,7 +10,6 @@ import {
 } from '../mocks/carMocks';
 
 describe('Car Service', () => {
-  const carModel = CreateCarModel.instantiate();
   const carService = CreateCarService.instantiate();
 
   before(() => {
