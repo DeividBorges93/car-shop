@@ -15,6 +15,7 @@ chai.use(chaiAsPromised);
 
 describe('Car Model', () => {
   const carModel = CreateCarModel.instantiate();
+  const _id = '4edd40c86762e0fb12000003';
 
   afterEach(()=>{
     sinon.restore();
@@ -33,6 +34,14 @@ describe('Car Model', () => {
       sinon.stub(Model, 'find').resolves(carArrayMock);
       const cars = await carModel.read();
       expect(cars).to.be.deep.equal(carArrayMock);
+    });
+  });
+
+  describe('Finding a car', () => {
+    it('successfully found', async () => {
+      sinon.stub(Model, 'findOne').resolves(carMockWithId);
+      const car = await carModel.readOne(_id);
+      expect(car).to.be.deep.equal(carMockWithId);
     });
   });
 });
