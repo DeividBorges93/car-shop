@@ -59,7 +59,7 @@ describe('Car Service', () => {
     });
   
     it('if car does not exist', async () => {
-      sinon.stub(carModel, 'readOne').resolves(carMockFailure);
+      sinon.stub(carModel, 'readOne').resolves(null);
         return expect(carService.readOne(nonExistentId)).to.eventually.be.rejectedWith(Error, ErrorTypes.EntityNotFound);
     });
   });
