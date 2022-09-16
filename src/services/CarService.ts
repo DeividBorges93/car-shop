@@ -29,4 +29,28 @@ export default class CarService implements IService<ICar> {
 
     return car;
   }
+
+  public async update(_id:string, payload: ICar): Promise<ICar | null> {
+    if (!isValidObjectId(_id)) throw Error(ErrorTypes.InvalidMongoId);
+
+    const parsed = carZodSchema.safeParse(payload);
+
+    if (!parsed.success) throw parsed.error;
+    
+    const updatedCar = await this._car.update(_id, parsed.data);
+
+    if (!updatedCar) throw new Error(ErrorTypes.EntityNotFound);
+
+    return updatedCar;
+  }
+
+  // public async delete(_id:string) {
+  //   if (!isValidObjectId(_id)) throw Error(ErrorTypes.InvalidMongoId);
+
+  //   const car = this._car.delete(_id);
+
+  //   if (!car) throw new Error(ErrorTypes.EntityNotFound);
+
+  //   return car;
+  // }
 }
