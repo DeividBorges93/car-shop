@@ -44,13 +44,13 @@ export default class CarService implements IService<ICar> {
     return updatedCar;
   }
 
-  // public async delete(_id:string) {
-  //   if (!isValidObjectId(_id)) throw Error(ErrorTypes.InvalidMongoId);
+  public async delete(_id:string) {
+    if (!isValidObjectId(_id)) throw Error(ErrorTypes.InvalidMongoId);
 
-  //   const car = this._car.delete(_id);
+    const car = await this._car.delete(_id);
 
-  //   if (!car) throw new Error(ErrorTypes.EntityNotFound);
+    if (!car) throw new Error(ErrorTypes.EntityNotFound);
 
-  //   return car;
-  // }
+    return car;
+  }
 }
